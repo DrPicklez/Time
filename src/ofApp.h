@@ -26,6 +26,7 @@ public:
     Interaction interaction;
     ImageLoader imloader;
     vector<ofTexture> textures;
+    vector<ofFbo> fbos;
     ofTexture texture;
     ofShader shader;
     ofFbo textNormalFBO, maskNormalFBO;

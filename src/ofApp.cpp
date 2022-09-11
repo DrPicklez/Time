@@ -4,15 +4,11 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     interaction.setup();
-    textures = imloader.getTextures();
     shader.load("shaders_gl3/masking");
-    texture = imloader.getTexture();
+    imloader.setup(ofVec2f(ofGetWidth(), ofGetHeight()));
+    fbos = imloader.getFBOs();
     textNormalFBO.allocate(ofGetWidth(), ofGetHeight());
     maskNormalFBO.allocate(ofGetWidth(), ofGetHeight());
-    //ofDisableArbTex();
-
-
-
 }
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -30,17 +26,16 @@ void ofApp::draw(){
     interaction.sumDiff.draw(0, 0, maskNormalFBO.getWidth(), maskNormalFBO.getHeight());
     maskNormalFBO.end();
 
-    float nTex = 1. / textures.size();
+    float nTex = 1. / fbos.size();
 
-    for(int i = 0; i < textures.size(); i ++){
-//    for(int i = textures.size() -1; i >= 0; i --){
-
+    for(int i = 0; i < fbos.size(); i ++){
         textNormalFBO.begin();
-        textures[i].draw(0, 0, textNormalFBO.getWidth(), textNormalFBO.getHeight());
+        fbos[i].draw(0, 0);
         textNormalFBO.end();
+
         cout << float(nTex * (i + 1)) << endl;
         shader.begin();
-        shader.setUniformTexture("maskTex", maskNormalFBO.getTextureReference(), 1);
+        shader.setUniformTexture("maskTex", maskNormalFBO.getTexture(), 1);
         shader.setUniform1f("nTex", float(nTex * (i + 1)));
         textNormalFBO.draw(0, 0);
         shader.end();
