@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#define DEBUG 1
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -37,15 +38,21 @@ void ofApp::draw(){
         textNormalFBO.begin();
         textures[i].draw(0, 0, textNormalFBO.getWidth(), textNormalFBO.getHeight());
         textNormalFBO.end();
-
+        cout << float(nTex * (i + 1)) << endl;
         shader.begin();
         shader.setUniformTexture("maskTex", maskNormalFBO.getTextureReference(), 1);
-        shader.setUniform1f("nTex", float(nTex * i));
+        shader.setUniform1f("nTex", float(nTex * (i + 1)));
         textNormalFBO.draw(0, 0);
         shader.end();
     }
 
-    maskNormalFBO.draw(0, 0, ofGetWidth()/4, ofGetHeight()/4);
+    if(DEBUG){
+        maskNormalFBO.draw(0, 0, ofGetWidth()/4, ofGetHeight()/4);
+        ofPushStyle();
+        ofSetColor(ofColor::green);
+        ofDrawBitmapString(ofToString(ofGetFrameRate()),0, 10, 1);
+        ofPopStyle();
+    }
 }
 
 //--------------------------------------------------------------
