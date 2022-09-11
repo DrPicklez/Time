@@ -1,1 +1,4 @@
-/bin/* 
+*.jpg
+*.png
+*.bin
+ 
