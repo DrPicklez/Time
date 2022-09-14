@@ -30,6 +30,7 @@ public:
     ofTexture texture;
     ofShader shader;
     ofFbo textNormalFBO, maskNormalFBO;
+    int nImages;
 
 
 

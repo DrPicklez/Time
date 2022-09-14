@@ -6,7 +6,14 @@ void ofApp::setup(){
     interaction.setup();
     shader.load("shaders_gl3/masking");
     imloader.setup(ofVec2f(ofGetWidth(), ofGetHeight()));
+
     fbos = imloader.getFBOs();
+    nImages = fbos.size();
+
+//    imloader.packFBOsForCircularBuffer();
+//    nImages = imloader.sampsInCircularBuffer;
+    cout << "nImgaes: " << nImages << endl;
+
     textNormalFBO.allocate(ofGetWidth(), ofGetHeight());
     maskNormalFBO.allocate(ofGetWidth(), ofGetHeight());
 }
@@ -26,18 +33,18 @@ void ofApp::draw(){
     interaction.sumDiff.draw(0, 0, maskNormalFBO.getWidth(), maskNormalFBO.getHeight());
     maskNormalFBO.end();
 
-    float nTex = 1. / fbos.size();
+    float nTex = 1. / nImages;
 
-    for(int i = 0; i < fbos.size(); i ++){
-        textNormalFBO.begin();
-        fbos[i].draw(0, 0);
-        textNormalFBO.end();
+    for(int i = 0; i < nImages; i ++){
+//        textNormalFBO.begin();
+//        textNormalFBO.end();
 
-        cout << float(nTex * (i + 1)) << endl;
         shader.begin();
         shader.setUniformTexture("maskTex", maskNormalFBO.getTexture(), 1);
         shader.setUniform1f("nTex", float(nTex * (i + 1)));
-        textNormalFBO.draw(0, 0);
+        fbos[i].draw(0, 0);
+//        imloader.getCircularBufferTexture(0).draw(0, 0);
+//        textNormalFBO.draw(0, 0);
         shader.end();
     }
 
